@@ -30,5 +30,5 @@ export function orderMessage(cart, products, customer = {}) {
     }).join('\n') + '\n\nSubtotal estimado dos produtos: ' + money(cartTotal(cart, products)) +
     '\nForma de recebimento: ' + (delivery ? 'entrega.' : 'retirada na loja.') +
     (delivery ? '\nTaxa de entrega: consultar com os atendentes.' : '') +
-    '\n\nOs produtos estão sujeitos à disponibilidade em estoque.\nPodem confirmar a disponibilidade e os valores, por favor?';
+    '\n\nOs produtos estão sujeitos à disponibilidade em estoque.\nPodem confirmar a disponibilidade, por favor?';
 }
