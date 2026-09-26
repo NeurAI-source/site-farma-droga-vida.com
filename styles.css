@@ -6,3 +6,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 @media(max-width:600px){.hero h1{font-size:clamp(32px,9.6vw,39px)}}
+
+.order-form select{margin:6px 0 15px;font-weight:400;font-size:13px}.order-preview{margin:0 0 18px;font-size:12px}.order-preview summary{cursor:pointer;color:var(--red);font-weight:700}.order-preview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 Arial,Helvetica,sans-serif;padding:14px;background:#f7f7f8;border-radius:8px}.order-note{margin-top:12px;font-size:11px}

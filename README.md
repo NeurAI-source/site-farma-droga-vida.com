@@ -30,3 +30,5 @@ As alegações do mockup sobre entrega nacional, parcelamento em 12 vezes e mais
 ## Verificação
 
 `npm test` verifica busca por acentos, categorias, integridade dos arquivos, cálculo em centavos, variantes e recuperação segura do carrinho. Validar também visualmente em desktop e celular antes de publicar alterações.
+
+O carrinho prepara um PRÉ-PEDIDO com nome, forma de recebimento e bairro obrigatório para entrega. O cliente pode visualizar o texto antes de abrir o WhatsApp. Os dados de atendimento ficam apenas na memória da página, sem gravação no navegador ou servidor.

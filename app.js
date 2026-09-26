@@ -72,11 +72,43 @@ function showDetail(id) {
   $('#detail-add').onclick=()=>{const variant=p.variants.length?$('#variant').value:'';if(p.variants.length&&!variant){$('#variant').focus();toast('Escolha o tamanho para continuar.');return;}addToCart(id,variant);$('#detail-dialog').close();};
   openDialog($('#detail-dialog'));
 }
+const customer = { name: '', receipt: 'entrega', neighborhood: '' };
+function refreshOrderPreview() {
+  const preview = $('#order-preview');
+  if (preview) preview.textContent = orderMessage(cart, products, customer);
+}
 function renderCart() {
   $('#cart-items').innerHTML=cart.length?cart.map((item,index)=>{const p=products.find(p=>p.id===item.id); const variant=p.variants.find(v=>v.size===item.variant);return `<article class="cart-item"><img src="${escape(p.imageUrl)}" alt="${escape(p.name)}"><div><h3>${escape(p.name)}</h3><p>${variant?`${escape(variant.size)} · ${variant.packageQuantity} unidades`:escape(p.detail)}</p><strong>${money(p.priceCents*item.qty)}</strong><div class="quantity"><button data-qty="${index}" data-delta="-1" aria-label="Diminuir quantidade de ${escape(p.name)}">−</button><span>${item.qty}</span><button data-qty="${index}" data-delta="1" aria-label="Aumentar quantidade de ${escape(p.name)}">+</button><button data-remove="${index}">Remover</button></div></div></article>`}).join(''):`<div class="empty"><h3>Seu carrinho está esperando por você.</h3><p>Escolha seus produtos e combine tudo com a nossa equipe.</p><button id="continue-shopping" class="button red-button">Ver produtos ${icon('arrow')}</button></div>`;
-  $('#cart-summary').innerHTML=cart.length?`<div class="cart-subtotal"><span>Total estimado</span><span>${money(cartTotal(cart,products))}</span></div><p class="cart-footnote">Valores e disponibilidade serão confirmados pela equipe. Frete, se houver, será informado no atendimento. Nenhum pagamento é realizado neste site.</p><a class="button red-button checkout" href="${whatsapp(orderMessage(cart,products))}" target="_blank" rel="noopener noreferrer">${icon('message')} Continuar no WhatsApp ${icon('arrow')}</a>`:'';
+  $('#cart-summary').innerHTML=cart.length?`<div class="cart-subtotal"><span>Subtotal estimado</span><span>${money(cartTotal(cart,products))}</span></div><p class="cart-footnote">Os produtos estão sujeitos à disponibilidade em estoque. Confirme os valores com a equipe.</p><form id="order-form" class="order-form"><label for="order-name">Seu nome<input id="order-name" name="name" required maxlength="80" autocomplete="given-name" placeholder="Como podemos chamar você?" value="${escape(customer.name)}"></label><label for="order-receipt">Forma de recebimento<select id="order-receipt" name="receipt"><option value="entrega" ${customer.receipt==='entrega'?'selected':''}>Entrega</option><option value="retirada" ${customer.receipt==='retirada'?'selected':''}>Retirada na loja</option></select></label><label id="neighborhood-label" for="order-neighborhood" ${customer.receipt==='retirada'?'hidden':''}>Bairro para entrega<input id="order-neighborhood" name="neighborhood" maxlength="120" ${customer.receipt==='entrega'?'required':''} placeholder="Informe seu bairro" value="${escape(customer.neighborhood)}"></label><p id="delivery-note" class="cart-footnote" ${customer.receipt==='retirada'?'hidden':''}>Taxa de entrega: consultar com os atendentes.</p><details class="order-preview"><summary>Ver mensagem do pré-pedido</summary><pre id="order-preview"></pre></details><button type="submit" class="button red-button checkout">${icon('message')} Continuar no WhatsApp ${icon('arrow')}</button><p class="cart-footnote order-note">Você poderá revisar a mensagem no WhatsApp antes de enviar. Este pré-pedido não confirma a compra.</p></form>`:'';
+  refreshOrderPreview();
   $('#continue-shopping')?.addEventListener('click',()=>{$('#cart-dialog').close();selectCategory('Todos');});
 }
+$('#cart-summary').addEventListener('input', event => {
+  if (event.target.name === 'name' || event.target.name === 'neighborhood') {
+    customer[event.target.name] = event.target.value;
+    event.target.setCustomValidity('');
+    refreshOrderPreview();
+  }
+});
+$('#cart-summary').addEventListener('change', event => {
+  if (event.target.name !== 'receipt') return;
+  customer.receipt = event.target.value;
+  const delivery = customer.receipt === 'entrega';
+  $('#neighborhood-label').hidden = !delivery;
+  $('#order-neighborhood').required = delivery;
+  $('#order-neighborhood').setCustomValidity('');
+  $('#delivery-note').hidden = !delivery;
+  refreshOrderPreview();
+});
+$('#cart-summary').addEventListener('submit', event => {
+  event.preventDefault();
+  if (!cart.length) return;
+  for (const input of event.target.querySelectorAll('input[required]')) {
+    input.setCustomValidity(input.value.trim() ? '' : 'Preencha este campo para continuar.');
+  }
+  if (!event.target.reportValidity()) return;
+  window.open(whatsapp(orderMessage(cart, products, customer)), '_blank', 'noopener,noreferrer');
+});
 $('#cart-items').addEventListener('click',event=>{const qty=event.target.closest('[data-qty]'), remove=event.target.closest('[data-remove]');if(qty){const i=Number(qty.dataset.qty);cart[i].qty=Math.min(99,cart[i].qty+Number(qty.dataset.delta));cart=cart.filter(i=>i.qty>0);}if(remove)cart.splice(Number(remove.dataset.remove),1);if(qty||remove){updateCounts();renderCart();}});
 document.querySelectorAll('.cart-trigger').forEach(b=>b.onclick=()=>{renderCart();openDialog($('#cart-dialog'));});
 $('#search-form').addEventListener('submit',event=>{event.preventDefault();query=$('#search').value;all=true;category='Todos';subcategory='';favoriteOnly=false;limit=12;renderProducts();$('#ofertas').scrollIntoView({behavior:'smooth'});});

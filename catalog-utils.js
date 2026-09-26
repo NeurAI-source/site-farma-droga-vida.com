@@ -18,9 +18,17 @@ export function sanitizeCart(value, products) {
   return [...merged.values()];
 }
 export function cartTotal(cart, products) { return cart.reduce((sum, item) => sum + products.find(p => p.id === item.id).priceCents * item.qty, 0); }
-export function orderMessage(cart, products) {
-  return 'Olá! Gostaria de consultar a disponibilidade deste pedido na Droga Vida Popular:\n\n' + cart.map(item => {
-    const p = products.find(p => p.id === item.id); const v = p.variants.find(v => v.size === item.variant);
-    return `${item.qty} × ${p.name}${v ? ` — ${v.size}, ${v.packageQuantity} unidades` : ` — ${p.detail}`} — ${money(p.priceCents * item.qty)}`;
-  }).join('\n') + `\n\nTotal estimado: ${money(cartTotal(cart, products))}.\nPodem confirmar os preços, o estoque e as opções de entrega ou retirada?`;
+export function orderMessage(cart, products, customer = {}) {
+  const delivery = customer.receipt !== 'retirada';
+  const name = String(customer.name || '').trim();
+  const neighborhood = String(customer.neighborhood || '').trim();
+  return 'Olá, vim pelo site da Droga Vida Popular e gostaria de consultar este PRÉ-PEDIDO:\n' +
+    'Nome: ' + name + (delivery ? '\nBairro para entrega: ' + neighborhood : '') + '\n\n' + cart.map(item => {
+      const p = products.find(p => p.id === item.id);
+      const v = p.variants.find(v => v.size === item.variant);
+      return '· ' + item.qty + 'x ' + p.name + (v ? ' — tamanho ' + v.size + ', pacote com ' + v.packageQuantity + (p.subcategory === 'Fraldas' ? ' fraldas' : ' unidades') : '') + ' — ' + money(p.priceCents * item.qty);
+    }).join('\n') + '\n\nSubtotal estimado dos produtos: ' + money(cartTotal(cart, products)) +
+    '\nForma de recebimento: ' + (delivery ? 'entrega.' : 'retirada na loja.') +
+    (delivery ? '\nTaxa de entrega: consultar com os atendentes.' : '') +
+    '\n\nOs produtos estão sujeitos à disponibilidade em estoque.\nPodem confirmar a disponibilidade e os valores, por favor?';
 }
