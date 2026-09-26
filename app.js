@@ -82,6 +82,7 @@ document.querySelectorAll('.cart-trigger').forEach(b=>b.onclick=()=>{renderCart(
 $('#search-form').addEventListener('submit',event=>{event.preventDefault();query=$('#search').value;all=true;category='Todos';subcategory='';favoriteOnly=false;limit=12;renderProducts();$('#ofertas').scrollIntoView({behavior:'smooth'});});
 $('#search').addEventListener('input',()=>{query=$('#search').value;all=true;category='Todos';subcategory='';favoriteOnly=false;limit=12;renderProducts();});
 $('#show-all').onclick=()=>selectCategory('Todos'); $('#load-more').onclick=()=>{limit+=12;renderProducts();};
+document.querySelectorAll('a[href="#ofertas"]').forEach(link => link.addEventListener('click', () => selectCategory('Todos')));
 $('#clear-filters').onclick=()=>selectCategory('Todos'); $('#favorites').onclick=()=>{favoriteOnly=!favoriteOnly;all=true;category='Todos';subcategory='';query='';$('#search').value='';limit=12;renderProducts();};
 $('#contact-form').addEventListener('submit',event=>{event.preventDefault();const data=new FormData(event.currentTarget);const text=`Olá, sou ${String(data.get('name')).trim()}.\n\n${String(data.get('message')).trim()}`;window.open(whatsapp(text),'_blank','noopener,noreferrer');});
 $('#privacy').onclick=()=>openDialog($('#privacy-dialog')); $('#clear-data').onclick=()=>{cart=[];favorites=[];renderProducts();renderCart();toast('Carrinho e favoritos apagados deste navegador.');};
