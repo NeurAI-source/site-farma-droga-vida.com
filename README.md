@@ -32,3 +32,7 @@ As alegações do mockup sobre entrega nacional, parcelamento em 12 vezes e mais
 `npm test` verifica busca por acentos, categorias, integridade dos arquivos, cálculo em centavos, variantes e recuperação segura do carrinho. Validar também visualmente em desktop e celular antes de publicar alterações.
 
 O carrinho prepara um PRÉ-PEDIDO com nome, forma de recebimento e bairro obrigatório para entrega. O cliente pode visualizar o texto antes de abrir o WhatsApp. Os dados de atendimento ficam apenas na memória da página, sem gravação no navegador ou servidor.
+
+## Painel administrativo — primeira etapa
+
+Acesse /admin/ para visualizar indicadores e editar o catálogo como rascunho local. Inclui busca, filtros, cadastro e edição de produtos, preços, tamanhos, estoque, destaques, disponibilidade por loja e exportação de catalog.json. Categorias e lojas são consultadas, sem edição nesta etapa. O painel não possui autenticação nem conexão de escrita com o site público: os rascunhos ficam somente no navegador. Não inserir dados privados. Autenticação, banco de dados, publicação e reforço de segurança ficam para a integração futura. O painel de referência exigiu login; telas internas ainda não foram comparadas.
