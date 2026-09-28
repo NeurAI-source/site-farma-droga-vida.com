@@ -4,9 +4,10 @@ Site responsivo baseado no mockup fornecido. Catálogo com 41 produtos, imagens,
 
 ## Executar
 
-Requer Node.js 20 ou superior. Sem dependências de instalação.
+Requer Node.js 22 ou superior.
 
 ```sh
+npm ci
 npm run dev
 npm test
 npm run build
@@ -23,7 +24,7 @@ Abra http://127.0.0.1:4173. `dist/` contém o site estático para hospedagem, in
 - `styles.css`: layout responsivo, cores e tipografia.
 - A foto da família foi gerada para este projeto. Logo, produtos e fotos das lojas vieram do site fornecido.
 
-O catálogo é uma fotografia dos dados na data de importação: não existe sincronização automática de estoque ou preços. Atualize `catalog.json` e as imagens para alterações futuras. Preços e disponibilidade são confirmados pela equipe no WhatsApp. Não há login, pagamento online, envio de e-mail, painel administrativo ou armazenamento de dados de clientes no servidor. Carrinho e favoritos ficam no navegador; falhas de armazenamento não impedem o uso.
+O catálogo inicial foi importado da fonte indicada. A integração Supabase permite editar rascunhos e publicar pelo painel depois da ativação descrita em [SUPABASE-SETUP.md](SUPABASE-SETUP.md). Não há pagamento online. Carrinho e favoritos ficam no navegador; falhas de armazenamento não impedem o uso.
 
 As alegações do mockup sobre entrega nacional, parcelamento em 12 vezes e mais de 20 anos não foram usadas porque não constam na fonte real. Categorias sem produtos oferecem consulta à equipe, sem inventar itens ou preços.
 
@@ -33,6 +34,6 @@ As alegações do mockup sobre entrega nacional, parcelamento em 12 vezes e mais
 
 O carrinho prepara um PRÉ-PEDIDO com nome, forma de recebimento e bairro obrigatório para entrega. O cliente pode visualizar o texto antes de abrir o WhatsApp. Os dados de atendimento ficam apenas na memória da página, sem gravação no navegador ou servidor.
 
-## Painel administrativo — primeira etapa
+## Painel administrativo — integração preparada
 
-Acesse /admin/ para visualizar indicadores e editar o catálogo como rascunho local. Inclui busca, filtros, cadastro e edição de produtos, preços, tamanhos, estoque, destaques, disponibilidade por loja e exportação de catalog.json. Categorias e lojas são consultadas, sem edição nesta etapa. O painel não possui autenticação nem conexão de escrita com o site público: os rascunhos ficam somente no navegador. Não inserir dados privados. Autenticação, banco de dados, publicação e reforço de segurança ficam para a integração futura. O painel de referência exigiu login; telas internas ainda não foram comparadas.
+Acesse `/admin/` pelo link separado. Sem configuração do Supabase, o painel fica bloqueado e mostra conexão pendente. A integração inclui login, autorização por perfil, rascunho na nuvem, upload de imagens, publicação pelo GitHub Actions e métricas de acesso. Só administradores cadastram usuários e publicam; editores alteram o catálogo. Categorias e lojas continuam somente para consulta. O botão Exportar baixa uma cópia e não publica. Consulte o guia de ativação; testes reais de Auth, RLS, Storage e deploy dependem de um projeto Supabase configurado.

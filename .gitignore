@@ -1,3 +1,18 @@
+# Build and dependencies
 dist/
 node_modules/
 .DS_Store
+# Secrets and local environments, at any directory level
+.env
+.env.*
+*.env
+!.env.example
+!exemple.env
+.venv/
+venv/
+__pycache__/
+supabase/.temp/
+# Generated browser bundle
+vendor/
+published-catalog.json
+supabase/functions/_shared/

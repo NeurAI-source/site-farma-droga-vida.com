@@ -1,0 +1,5 @@
+[functions.admin-api]
+verify_jwt = false
+# admin-api validates every bearer token with Auth.getUser before any operation.
+[functions.page-view]
+verify_jwt = false

@@ -30,7 +30,7 @@ const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp
 const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
 const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* The catalog also works without browser storage. */ } };
 let products = [], cart = [], favorites = [], category = 'Todos', subcategory = '', query = '', favoriteOnly = false, all = false, limit = 12, toastTimer;
-const featuredIds = [31, 32, 41, 5, 3, 6];
+
 const whatsapp = text => `https://wa.me/5517996630482?text=${encodeURIComponent(text)}`;
 function toast(message) { $('#toast').textContent = message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), 3000); }
 function openDialog(dialog) { if (!dialog.open) dialog.showModal(); }
@@ -49,7 +49,7 @@ function productCard(p) {
 }
 function renderProducts() {
   const filtered = filterProducts(products, { category, subcategory, query, favorites: favoriteOnly ? favorites : null });
-  const displayed = all || category !== 'Todos' || query || favoriteOnly ? filtered : featuredIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+  const displayed = all || category !== 'Todos' || query || favoriteOnly ? filtered : filtered.filter(p => p.featured);
   $('#products-title').textContent = favoriteOnly ? 'Seus favoritos' : query ? 'Resultado da busca' : category !== 'Todos' ? (subcategory || category) : all ? 'Todos os produtos' : 'Produtos em destaque';
   $('#results').textContent = `${displayed.length} ${displayed.length === 1 ? 'produto encontrado':'produtos encontrados'}${query ? ` para “${query}”` : ''}`;
   $('#products').innerHTML = displayed.length ? displayed.slice(0,limit).map(productCard).join('') : `<div class="empty"><h3>${favoriteOnly ? 'Seus favoritos ficam aqui.' : 'Não encontramos produtos nesta seleção.'}</h3><p>${favoriteOnly ? 'Toque no coração dos produtos que você gosta.' : 'Nossa equipe pode consultar a disponibilidade para você.'}</p><a class="button red-button" href="${whatsapp('Olá! Gostaria de consultar '+(query || subcategory || category)+'.')}" target="_blank" rel="noopener noreferrer">Consultar no WhatsApp ${icon('arrow')}</a></div>`;
