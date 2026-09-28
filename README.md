@@ -34,6 +34,6 @@ As alegações do mockup sobre entrega nacional, parcelamento em 12 vezes e mais
 
 O carrinho prepara um PRÉ-PEDIDO com nome, forma de recebimento e bairro obrigatório para entrega. O cliente pode visualizar o texto antes de abrir o WhatsApp. Os dados de atendimento ficam apenas na memória da página, sem gravação no navegador ou servidor.
 
-## Painel administrativo — integração preparada
+## Painel administrativo — Supabase conectado
 
-Acesse `/admin/` pelo link separado. Sem configuração do Supabase, o painel fica bloqueado e mostra conexão pendente. A integração inclui login, autorização por perfil, rascunho na nuvem, upload de imagens, publicação pelo GitHub Actions e métricas de acesso. Só administradores cadastram usuários e publicam; editores alteram o catálogo. Categorias e lojas continuam somente para consulta. O botão Exportar baixa uma cópia e não publica. Consulte o guia de ativação; testes reais de Auth, RLS, Storage e deploy dependem de um projeto Supabase configurado.
+Acesse `/admin/` pelo link separado. Sem configuração do Supabase, o painel fica bloqueado e mostra conexão pendente. A integração inclui login, autorização por perfil, rascunho na nuvem, upload de imagens, publicação pelo GitHub Actions e métricas de acesso. Só administradores cadastram usuários e publicam; editores alteram o catálogo. Categorias e lojas continuam somente para consulta. O botão Exportar baixa uma cópia e não publica. Auth, RLS, Storage e publicação pelo painel foram verificados no projeto conectado. Consulte o guia para reinstalação e renovação do token de publicação.

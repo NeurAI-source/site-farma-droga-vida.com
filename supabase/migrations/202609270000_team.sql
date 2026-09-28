@@ -15,4 +15,3 @@ alter table public.team_members enable row level security;
 create policy own_membership on public.team_members for select to authenticated using (user_id = auth.uid());
 revoke all on public.team_members from anon, authenticated;
 grant select on public.team_members to authenticated;
-

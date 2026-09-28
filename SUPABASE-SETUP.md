@@ -1,6 +1,8 @@
 # Ativação do painel Droga Vida
 
-O código está preparado, mas o login, o banco, o Storage e a publicação só funcionam depois da configuração abaixo. O site público atual continua no GitHub Pages. Não trocar a origem do Pages antes de concluir a configuração.
+Integração ativada no projeto `bzhsnoqlbhjaaheugpku`. GitHub Pages usa Actions, o cadastro público está desativado e o administrador da farmácia é autorizado por `team_members`. As instruções abaixo servem para reinstalação; não repita migrações já aplicadas. O token de publicação no Supabase expira em 27/12/2026 e precisará ser renovado antes dessa data.
+
+Validação em 28/09/2026: login, perfis admin/editor/sem autorização, RLS, conflito de edição, cadastro de usuário, envio de imagem, registro de acessos e publicação completa pelo painel aprovados. Contas temporárias de teste são removidas após a verificação.
 
 ## 1. Criar projeto gratuito
 
