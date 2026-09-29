@@ -19,4 +19,5 @@ const source = process.env.CATALOG_FILE || new URL('catalog.json', root);
 const catalog = validateCatalog(JSON.parse(await readFile(source, 'utf8')));
 await writeFile(new URL('catalog.json', dist), JSON.stringify(catalog));
 await writeFile(new URL('.nojekyll', dist), '');
+await writeFile(new URL('404.html', dist), '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Página não encontrada | Droga Vida Popular</title><body><main><h1>Página não encontrada</h1><p>Este endereço não está disponível.</p><a href="/">Voltar para a Droga Vida Popular</a></main></body></html>');
 console.log(`Site pronto em dist/. Integração: ${url ? 'configurada' : 'aguardando Supabase'}.`);
