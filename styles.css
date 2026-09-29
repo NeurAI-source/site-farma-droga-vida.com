@@ -22,8 +22,9 @@
 .instagram-button{font-size:16px;gap:12px;min-height:50px;max-width:100%;overflow-wrap:anywhere}
 .instagram-button svg{width:22px;height:22px;flex-shrink:0}
 .instagram-section a:focus-visible{outline-color:var(--yellow);outline-offset:5px}
-.footer-grid>div>a.footer-instagram{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:700;overflow-wrap:anywhere}
-.footer-instagram svg{width:22px;height:22px;flex-shrink:0;color:var(--yellow)}
+/* Keep this more specific than the general footer link rule, including its :not() classes. */
+.footer-grid>div>a.footer-instagram:not(.brand):not(.button){display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:10px;min-height:44px;font-size:14px;font-weight:700;white-space:nowrap;color:#fff}
+.footer-instagram svg{display:block;width:22px;height:22px;flex:0 0 22px;color:var(--yellow)}
 .footer-instagram:hover span{text-decoration:underline;text-underline-offset:4px}
 @media(max-width:750px){.instagram-section{grid-template-columns:1fr;margin-bottom:30px}.instagram-photo{min-height:280px}.instagram-photo img{object-position:center 35%}.instagram-photo span{left:20px;bottom:20px}.instagram-copy{padding:28px 24px 32px}.instagram-copy h2{font-size:30px}.instagram-copy h2 br{display:none}.instagram-icon{margin-bottom:18px}.instagram-copy p{margin-bottom:22px}.instagram-button{width:100%}}
 @media(max-width:380px){.instagram-copy{padding-inline:20px}.instagram-copy h2{font-size:27px}.instagram-button{padding-inline:12px;font-size:15px}}
