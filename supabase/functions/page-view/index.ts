@@ -1,9 +1,12 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.2';
-const origin = Deno.env.get('SITE_ORIGIN') || '';
-const headers = { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Headers': 'apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Vary': 'Origin' };
+import { allowedOrigin } from '../cors.js';
+const origins = Deno.env.get('SITE_ORIGINS') || Deno.env.get('SITE_ORIGIN') || '';
+const baseHeaders = { 'Access-Control-Allow-Headers': 'apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Vary': 'Origin' };
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 Deno.serve(async req => {
-  if (req.headers.get('origin') !== origin) return new Response(null, { status: 403 });
+  const origin = allowedOrigin(origins, req.headers.get('origin'));
+  const headers = { ...baseHeaders, ...(origin ? { 'Access-Control-Allow-Origin': origin } : {}) };
+  if (!origin) return new Response(null, { status: 403 });
   if (req.method === 'OPTIONS') return new Response(null, { headers });
   if (req.method !== 'POST') return new Response(null, { status: 405, headers });
   try {

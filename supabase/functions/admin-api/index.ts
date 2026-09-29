@@ -1,13 +1,16 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.117.2';
 // Copy shared validator into _shared when deploying (npm run prepare:functions).
+import { allowedOrigin } from '../cors.js';
 import { validateCatalog } from '../_shared/catalog-validation.js';
 const env = (key: string) => Deno.env.get(key) || '';
-const origin = env('SITE_ORIGIN');
-const headers = { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Content-Type': 'application/json', 'Vary': 'Origin' };
+const origins = env('SITE_ORIGINS') || env('SITE_ORIGIN');
+const baseHeaders = { 'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Content-Type': 'application/json', 'Vary': 'Origin' };
 const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false, autoRefreshToken: false } });
 Deno.serve(async req => {
+  const origin = allowedOrigin(origins, req.headers.get('origin'));
+  const headers = { ...baseHeaders, ...(origin ? { 'Access-Control-Allow-Origin': origin } : {}) };
   const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers });
-  if (req.headers.get('origin') !== origin) return reply({ error: 'Origem não autorizada.' }, 403);
+  if (!origin) return reply({ error: 'Origem não autorizada.' }, 403);
   if (req.method === 'OPTIONS') return new Response(null, { headers });
   if (req.method !== 'POST') return reply({ error: 'Método inválido.' }, 405);
   try {

@@ -69,3 +69,13 @@ Métricas começam na ativação; não recuperam visitas antigas. Visualizaçõe
 A migração `202609280000_team_roles.sql` acrescenta Proprietário(a) e Gerente. Esses cargos podem editar o catálogo e enviar imagens, como Editor. Cadastrar usuários e publicar continuam exclusivos de Administrador. O cargo aparece no cabeçalho do painel.
 
 A migração `202609290000_remove_users.sql` permite excluir contas pelo menu Usuários, somente para Administrador, com confirmação do e-mail. Protege a própria conta e mantém imagens e publicações. Se o Auth recusar a exclusão, o acesso permanece desativado e o painel permite tentar novamente.
+
+## Cloudflare Pages e domínio próprio
+
+A hospedagem de destino é Cloudflare Pages, projeto droga-vida-popular, plano gratuito. O domínio permanece registrado no Registro.br.
+
+O workflow existente recebe a publicação do ADM e envia dist/ ao Cloudflare quando a variável GitHub CLOUDFLARE_ACCOUNT_ID estiver configurada. A chave CLOUDFLARE_API_TOKEN fica somente em GitHub Actions Secrets, com permissão Pages Write na conta selecionada. Sem essa variável, o fluxo anterior do GitHub Pages continua disponível.
+
+As funções admin-api e page-view aceitam SITE_ORIGINS, lista de origens HTTPS separadas por vírgula. A origem antiga e o domínio próprio podem coexistir durante a migração. Autenticação e cargos continuam validados no Supabase. Nenhuma chave administrativa do Supabase é enviada para a hospedagem pública.
+
+Ativação depende da criação do projeto e da credencial, da troca de nameservers no Registro.br, da associação dos domínios no Pages e da validação do HTTPS e do DNSSEC.

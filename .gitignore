@@ -18,3 +18,5 @@ published-catalog.json
 supabase/functions/_shared/
 
 .vercel/
+
+.wrangler/
