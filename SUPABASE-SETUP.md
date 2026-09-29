@@ -63,3 +63,9 @@ Métricas começam na ativação; não recuperam visitas antigas. Visualizaçõe
 ## Desenvolvimento
 
 `npm test` valida catálogo e isolamento de configuração. `npm run dev` gera e serve apenas `dist/`, em loopback. Para carregar a configuração local use `node --env-file=.env scripts/build.mjs` e depois `node scripts/serve.mjs`. O projeto usa Node; não precisa de `.venv`.
+
+### Cargos adicionais
+
+A migração `202609280000_team_roles.sql` acrescenta Proprietário(a) e Gerente. Esses cargos podem editar o catálogo e enviar imagens, como Editor. Cadastrar usuários e publicar continuam exclusivos de Administrador. O cargo aparece no cabeçalho do painel.
+
+A migração `202609290000_remove_users.sql` permite excluir contas pelo menu Usuários, somente para Administrador, com confirmação do e-mail. Protege a própria conta e mantém imagens e publicações. Se o Auth recusar a exclusão, o acesso permanece desativado e o painel permite tentar novamente.

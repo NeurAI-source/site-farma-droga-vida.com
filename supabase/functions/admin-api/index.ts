@@ -20,11 +20,35 @@ Deno.serve(async req => {
     if (raw.length > 20000) return reply({ error: 'Solicitação muito grande.' }, 413);
     const body = JSON.parse(raw);
     if (member.role !== 'admin') return reply({ error: 'Somente administradores podem fazer isso.' }, 403);
+    if (body.action === 'list-users') {
+      const { data: members, error } = await db.from('team_members').select('user_id,role,active').order('user_id');
+      if (error) throw error;
+      const users = [];
+      for (const entry of members || []) {
+        const { data, error: lookupError } = await db.auth.admin.getUserById(entry.user_id);
+        if (lookupError) throw lookupError;
+        users.push({ id: entry.user_id, email: data.user.email, role: entry.role, active: entry.active, isSelf: entry.user_id === user.id });
+      }
+      return reply({ users });
+    }
+    if (body.action === 'delete-user') {
+      if (typeof body.userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.userId) || typeof body.confirmEmail !== 'string')
+        return reply({ error: 'Selecione um usuário e confirme o e-mail.' }, 400);
+      if (body.userId === user.id) return reply({ error: 'Você não pode excluir sua própria conta.' }, 400);
+      const { data: target } = await db.auth.admin.getUserById(body.userId);
+      if (!target.user?.email || body.confirmEmail.trim().toLowerCase() !== target.user.email.toLowerCase())
+        return reply({ error: 'O e-mail de confirmação não corresponde ao usuário.' }, 400);
+      const { error: prepareError } = await db.rpc('prepare_panel_user_deletion', { actor_id: user.id, target_id: body.userId });
+      if (prepareError) return reply({ error: 'Não foi possível remover este usuário. Sua conta e o último administrador são protegidos.' }, 409);
+      const { error: deleteError } = await db.auth.admin.deleteUser(body.userId);
+      if (deleteError) return reply({ error: 'O acesso foi desativado, mas a exclusão não foi concluída. Tente novamente ou consulte o responsável pelo sistema.' }, 409);
+      return reply({ ok: true });
+    }
     if (body.action === 'create-user') {
       const { email, password, role } = body;
       if (typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-        || typeof password !== 'string' || password.length < 12 || password.length > 128 || !['admin','editor'].includes(role))
-        return reply({ error: 'Informe e-mail, senha com pelo menos 12 caracteres e perfil válido.' }, 400);
+        || typeof password !== 'string' || password.length < 12 || password.length > 128 || !['admin','editor','owner','manager'].includes(role))
+        return reply({ error: 'Informe e-mail, senha com pelo menos 12 caracteres e cargo válido.' }, 400);
       const { data, error } = await db.auth.admin.createUser({ email, password, email_confirm: true });
       if (error) return reply({ error: 'Não foi possível cadastrar esse e-mail. Confira se já está cadastrado.' }, 400);
       const { error: insertError } = await db.from('team_members').insert({ user_id: data.user.id, role });
