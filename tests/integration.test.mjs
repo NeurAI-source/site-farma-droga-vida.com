@@ -29,3 +29,19 @@ test('built site only contains public files and unconfigured admin stays locked'
   const main=await readFile(new URL('dist/index.html',root),'utf8');
   assert.doesNotMatch(main,/href=["'][^"']*admin\//);
 });
+
+test('reduced codes preserve leading zeros, allow old catalogs, and reject duplicates', () => {
+  const copy = structuredClone(original);
+  copy.products[0].shortCode = '001234';
+  copy.products[1].shortCode = '1234';
+  assert.equal(validateCatalog(copy).products[0].shortCode, '001234');
+  copy.products[1].shortCode = '001234';
+  assert.throws(() => validateCatalog(copy), /repetido/);
+  copy.products[0].shortCode = 'Ab12'; copy.products[1].shortCode = 'aB12';
+  assert.throws(() => validateCatalog(copy), /repetido/);
+  copy.products[1].shortCode = '';
+  for (const bad of [1234, ' 1234', '<script>', 'x'.repeat(41)]) {
+    copy.products[0].shortCode = bad;
+    assert.throws(() => validateCatalog(copy), /Código reduzido inválido/);
+  }
+});

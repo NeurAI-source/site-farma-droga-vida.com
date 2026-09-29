@@ -5,6 +5,7 @@ export function validateCatalog(data) {
   const count = v => Number.isSafeInteger(v) && v >= 0 && v <= 100000000;
   const image = v => text(v, 2048) && (/^https:\/\/[^\s<>"']+$/.test(v) || /^assets\/[\w./-]+\.(png|jpe?g|webp|svg)$/i.test(v) && !v.includes('..'));
   const ids = new Set();
+  const shortCodes = new Set();
   for (const c of data.categories) {
     if (!text(c.name, 160) || !c.name || !Array.isArray(c.subcategories) || !c.subcategories.every(s => text(s.name, 160))) fail();
   }
@@ -15,6 +16,12 @@ export function validateCatalog(data) {
       || (p.updatedAt != null && !text(p.updatedAt, 80))
       || !['active','featured','availableStore1','availableStore2'].every(k => typeof p[k] === 'boolean')) fail();
     ids.add(p.id);
+    if (p.shortCode != null && (!text(p.shortCode, 40) || (p.shortCode !== '' && !/^[A-Z0-9._\/-]{1,40}$/i.test(p.shortCode)))) {
+      throw new Error('Código reduzido inválido. Use até 40 letras, números, pontos, traços, barras ou sublinhados, sem espaços.');
+    }
+    const code = (p.shortCode || '').toUpperCase();
+    if (code && shortCodes.has(code)) throw new Error(`Código reduzido repetido: ${p.shortCode}. Cada produto precisa ter seu próprio código.`);
+    if (code) shortCodes.add(code);
     for (const k of ['brand','detail','badge','subcategory']) if (!text(p[k], 200)) fail();
     const sizes = new Set();
     for (const v of p.variants) {
