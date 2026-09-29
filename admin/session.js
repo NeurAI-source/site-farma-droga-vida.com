@@ -1,4 +1,4 @@
-import { client, adminAction } from './backend.js';
+import { client, adminAction } from './backend.js?v=20260929';
 const $ = s => document.querySelector(s);
 export let membership;
 export async function authorize() {

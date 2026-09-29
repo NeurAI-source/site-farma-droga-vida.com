@@ -1,5 +1,5 @@
-import { client, adminAction } from './backend.js';
-import { authorize, refreshTraffic, refreshPublication } from './session.js';
+import { client, adminAction } from './backend.js?v=20260929';
+import { authorize, refreshTraffic, refreshPublication } from './session.js?v=20260929';
 import { validateCatalog } from '../catalog-validation.js';
 import {money,normalize} from '../catalog-utils.js';
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
