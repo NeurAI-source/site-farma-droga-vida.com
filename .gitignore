@@ -16,3 +16,5 @@ supabase/.temp/
 vendor/
 published-catalog.json
 supabase/functions/_shared/
+
+.vercel/
